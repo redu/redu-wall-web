@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from reduApi.HttpClient import HttpClient
 from reduApi.reduRequests import getTimeline, getSpaceData
-import csv
+from reduApi.writer import exportTimeline
 from datetime import datetime
 
 globalClient = HttpClient('P2AeHTJCV9Wy31Xq8IBIvOpYT1lhbluqvFh8RPdB',
@@ -22,6 +22,7 @@ def redu_csv(request):
         else:
             spaces = getSpaceData(requestClient)
             request.session['spaces'] = spaces
+            request.session.save()
         return render_to_response('redu_csv.html', {'spaces': spaces,
          "refresh_url": reverse("fetch_wall.views.refresh_spaces")},
             context_instance=RequestContext(request))
@@ -32,9 +33,11 @@ def redu_csv(request):
 def get_pin(request):
     if request.POST:
         code = request.POST['code']
-        requestClient = HttpClient('P2AeHTJCV9Wy31Xq8IBIvOpYT1lhbluqvFh8RPdB', 'SInt2l80rnhz8YkP3zt5ThvKmeb4Srt12EezDIVe')
+        requestClient = HttpClient('P2AeHTJCV9Wy31Xq8IBIvOpYT1lhbluqvFh8RPdB',
+         'SInt2l80rnhz8YkP3zt5ThvKmeb4Srt12EezDIVe')
         requestClient.initClient(code)
         request.session['requestClient'] = requestClient
+        request.session.save()
         return HttpResponseRedirect(reverse('fetch_wall.views.redu_csv'))
     else:
         return render_to_response('get_pin.html',
@@ -59,23 +62,12 @@ def show_space(request):
 
     response['Content-Disposition'] =  \
     'attachment; filename={0}.csv'.format(filename)
-
-    writer = csv.writer(response)
-    for post in posts:
-        user = post['user']
-        name = user['first_name']
-        name = name + " " + user['last_name']
-        name = name.encode('utf-8')
-        texto = post['text'].rstrip("\r\n")
-        texto = texto.encode('utf-8')
-        timestamp = post['created_at']
-        timestamp = timestamp.encode('utf-8')
-        writer.writerow([name, timestamp, texto])
-
+    exportTimeline(response, posts)
     return response
 
 
 def refresh_spaces(request):
     if request.session.get("spaces"):
         del request.session['spaces']
+        request.session.save()
     return HttpResponseRedirect(reverse("fetch_wall.views.redu_csv"))

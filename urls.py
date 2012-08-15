@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^get_pin/', 'fetch_wall.views.get_pin'),
     url(r'^clear_cookies/', 'fetch_wall.views.clear_cookies'),
     url(r'^show_space/', 'fetch_wall.views.show_space'),
-    url(r'^refresh_spaces/','fetch_wall.views.refresh_spaces')
+    url(r'^refresh_spaces/', 'fetch_wall.views.refresh_spaces'),
+    url(r'^$', 'fetch_wall.views.redu_csv')
 
 )

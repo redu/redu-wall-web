@@ -1,6 +1,5 @@
 from HyperText import findLink
 
-#best way to keep this requests urls?
 getmeUrl = "http://www.redu.com.br/api/me"
 getSpacesUrl = "{0}/spaces"
 getStatusesUrl = "http://www.redu.com.br/api/spaces/{0}/statuses/timeline"
