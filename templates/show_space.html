@@ -1,0 +1,5 @@
+{% csrf_token %}
+NOME, HORA, TEXTO</br>
+{% for post in posts %}
+{{post.user.first_name}} {{post.user.last_name}}, {{post.created_at}}, {{post.text}}</br>
+{% endfor %}

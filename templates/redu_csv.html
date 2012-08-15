@@ -1,0 +1,10 @@
+Choose the desired space:
+<form method='POST' action='/show_space/'>
+    {%csrf_token %}
+{% for space in spaces %}
+    <input type="radio" name="choice" id="choice{{foorloop.counter}}" value="{{forloop.counter}}"/>
+    <label for="choice{{forloop.counter}}">{{space.name}}</label>
+</br>
+{% endfor %}
+<input type="submit" value="GO"></form>
+<a href="{{ refresh_url }}">Refresh</a>

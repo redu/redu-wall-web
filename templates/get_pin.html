@@ -1,0 +1,6 @@
+Siga este link <a href="{{url}}">autorizacao</a> </br>
+<form action='/get_pin/' method='POST'>
+	{%csrf_token%}
+	PIN-CODE <input type='text' name='code'/> </br>
+	<input type='submit' name='GO!'/>
+</form>
